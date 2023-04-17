@@ -1,0 +1,23 @@
+table {
+  border-collapse: collapse;
+}
+
+tr {
+  height: 20px;
+}
+
+.bids-row {
+  color: #f1616d;
+}
+
+.asks-row {
+  color: #28ad74;
+}
+
+th,
+td {
+  width: 100px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  text-align: right;
+}

@@ -1,0 +1,30 @@
+@startuml
+actor User
+
+package "View" {
+  [OrderBook]
+  [OrderTable]
+  [TableCell]
+}
+
+database "Model" {
+  [OrderBookClass]
+  [WebSocketHandler]
+  [Observable]
+}
+
+component "ViewModel" {
+  [OrderBookViewModel]
+}
+
+User --> [OrderBook]
+[OrderBook] --> [OrderTable]
+[OrderTable] --> [TableCell]
+
+[OrderBook] --> [OrderBookViewModel] : Use
+
+[OrderBookViewModel] --> [OrderBook] : Manipulate
+[OrderBookViewModel] --> [WebSocketHandler] : Use
+[OrderBookViewModel] --> [Observable] : Use
+
+@enduml
