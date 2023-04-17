@@ -12,8 +12,8 @@ interface OrderBookViewModelProps {
   children: React.ReactElement<OrderTableProps>;
 }
 export const OrderBookViewModel = ({ children, currencyPair }: OrderBookViewModelProps) => {
-  const orderBook = new OrderBook();
-  const orderBookObservable = new Observable<OrderBook>();
+  const [orderBook] = React.useState(new OrderBook());
+  const [orderBookObservable] = React.useState(new Observable<OrderBook>());
 
   useEffect(() => {
     const subscribeMessage = {

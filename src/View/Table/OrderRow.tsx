@@ -18,9 +18,9 @@ export const OrderRow: React.FC<OrderRowProps> = ({ direction, index, orderBookO
     if (!orderBookObservable) {
       return;
     }
-    const observer = orderBookObservable.subscribe(orderBookE => {
+    const observer = orderBookObservable.subscribe(orderBook => {
       const isBids = direction === 'buy';
-      const [newPrice, newSize] = orderBookE.getCellData(isBids ? 'bids' : 'asks', index);
+      const [newPrice, newSize] = orderBook.getCellData(isBids ? 'bids' : 'asks', index);
       if (price !== newPrice) {
         setPrice(newPrice);
       }
