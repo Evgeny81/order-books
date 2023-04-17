@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TableCell } from './TableCell';
 import { Direction } from '../../shared/types';
 import { Observable } from '../../shared/Observer';
@@ -10,11 +10,33 @@ interface OrderRowProps {
   orderBookObservable?: Observable<OrderBook>;
 }
 
-export const OrderRow = ({ direction, index, orderBookObservable }: OrderRowProps) => {
+export const OrderRow: React.FC<OrderRowProps> = ({ direction, index, orderBookObservable }) => {
+  const [price, setPrice] = React.useState('');
+  const [size, setSize] = React.useState('');
+
+  useEffect(() => {
+    if (!orderBookObservable) {
+      return;
+    }
+    const observer = orderBookObservable.subscribe(orderBookE => {
+      const isBids = direction === 'buy';
+      const [newPrice, newSize] = orderBookE.getCellData(isBids ? 'bids' : 'asks', index);
+      if (price !== newPrice) {
+        setPrice(newPrice);
+      }
+      if (size !== newSize) {
+        setSize(newSize);
+      }
+    });
+
+    return () => {
+      orderBookObservable.unsubscribe(observer);
+    };
+  }, []);
   return (
     <tr className={direction === 'buy' ? 'bids-row' : 'asks-row'}>
-      <TableCell orderBookObservable={orderBookObservable} row={index} col={0} direction={direction} />
-      <TableCell orderBookObservable={orderBookObservable} row={index} col={1} direction={direction} />
+      <TableCell cellData={price} />
+      <TableCell cellData={size} />
     </tr>
   );
 };

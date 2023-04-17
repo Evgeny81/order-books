@@ -17,6 +17,8 @@ export class Observable<T> {
   }
 
   public notify(data: T): void {
-    this.observers.forEach(observer => observer(data));
+    for (let i = 0; i < this.observers.length; i++) {
+      this.observers[i](data);
+    }
   }
 }

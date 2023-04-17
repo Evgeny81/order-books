@@ -10,7 +10,6 @@ export interface OrderBookState {
 }
 
 export const currencyPairArray = ['BTC-USD', 'ETH-USD'] as const;
-// export const currencyPairArray = ['BTC-USD'] as const;
 
 export type CurrencyPair = (typeof currencyPairArray)[number];
 

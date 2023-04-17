@@ -33,11 +33,11 @@ export class OrderBook {
 
   public add(side: Direction, price: string, size: string): void {
     const isBids = side === 'buy';
-    const target = isBids ? [...this.bids] : [...this.asks];
+    const target = isBids ? this.bids : this.asks;
     const index = target.findIndex(([orderPrice]) => orderPrice === price);
     const comparator = isBids
-      ? (a: [string, string], b: [string, string]) => parseFloat(b[0]) - parseFloat(a[0])
-      : (a: [string, string], b: [string, string]) => parseFloat(a[0]) - parseFloat(b[0]);
+      ? (a: Order, b: Order) => parseFloat(b[0]) - parseFloat(a[0])
+      : (a: Order, b: Order) => parseFloat(a[0]) - parseFloat(b[0]);
 
     const volume = parseFloat(size);
     if (index !== -1) {
@@ -55,19 +55,13 @@ export class OrderBook {
     if (target.length > 120) {
       target.pop();
     }
-
-    if (isBids) {
-      this.bids = [...target];
-    } else {
-      this.asks = [...target];
-    }
   }
-  public getCellData(direction: 'bids' | 'asks', row: number, col: number): string {
+  public getCellData(direction: 'bids' | 'asks', row: number): Order {
     const orders = this[direction];
     if (!orders || !orders[row]) {
-      return '\u00A0';
+      return ['\u00A0', '\u00A0'];
     }
-    return orders[row][col];
+    return orders[row];
   }
   public delete(target: Order[], index: number): void {
     target.splice(index, 1);

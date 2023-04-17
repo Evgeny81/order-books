@@ -1,11 +1,11 @@
 import React, { useEffect, cloneElement } from 'react';
 import { OrderBook } from '../Model/OrderBook';
-import { Changes } from '../shared/types';
+import { Changes, Order, ProductSnapshot, ProductUpdate } from '../shared/types';
 import { WebSocketHandler } from '../Model/WebSocketHandler';
 import { Observable } from '../shared/Observer';
 import { OrderTableProps } from '../View/Table/OrderTable';
 import { loggerService } from '../Services/LoggerService';
-import {notificationService} from "../Services/NotificationService";
+import { notificationService } from '../Services/NotificationService';
 
 interface OrderBookViewModelProps {
   currencyPair: string;
@@ -35,20 +35,21 @@ export const OrderBookViewModel = ({ children, currencyPair }: OrderBookViewMode
     };
 
     const onMessage = (message: MessageEvent) => {
-      const data = JSON.parse(message.data);
+      const data: ProductUpdate | ProductSnapshot = JSON.parse(message.data);
 
       if (data.type === 'snapshot') {
         orderBook.bids = data.bids
           .slice(0, 100)
-          .sort((a: string, b: string) => parseFloat(b[0]) - parseFloat(a[0]));
+          .sort((a: Order, b: Order) => parseFloat(b[0]) - parseFloat(a[0]));
         orderBook.asks = data.asks
           .slice(0, 100)
-          .sort((a: string, b: string) => parseFloat(a[0]) - parseFloat(b[0]));
+          .sort((a: Order, b: Order) => parseFloat(a[0]) - parseFloat(b[0]));
         orderBookObservable.notify(orderBook);
       } else if (data.type === 'l2update') {
         data.changes.forEach(([side, price, size]: Changes) => {
           orderBook.add(side, price, size);
         });
+
         orderBookObservable.notify(orderBook);
       }
     };
@@ -72,6 +73,7 @@ export const OrderBookViewModel = ({ children, currencyPair }: OrderBookViewMode
       wsHandler.send(JSON.stringify(unsubscribeMessage));
       wsHandler.close();
       orderBook.clear();
+      orderBookObservable.removeObservers();
     };
   }, [currencyPair]);
 
