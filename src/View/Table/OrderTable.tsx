@@ -1,20 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { OrderRow } from './OrderRow';
-import { Observable } from '../../shared/Observer';
-import { OrderBook } from '../../Model/OrderBook';
+import { OrderBookViewModel } from '../../ViewModel/OrderBookViewModel';
+import { ordersSize } from '../../shared/constants';
+import { OrdersData } from '../../Model/Observer';
 import './OrderTable.css';
 
 export interface OrderTableProps {
-  orderBookObservable?: Observable<OrderBook>;
+  currencyPair: string;
 }
 
 const emptyRow = ['', ''];
 
 const initialOrders = {
-  bids: Array.from({ length: 100 }, () => [...emptyRow]),
-  asks: Array.from({ length: 100 }, () => [...emptyRow]),
+  bids: Array.from({ length: ordersSize - 20 }, () => [...emptyRow]),
+  asks: Array.from({ length: ordersSize - 20 }, () => [...emptyRow]),
 };
-export const OrderTable: React.FC<OrderTableProps> = ({ orderBookObservable }) => {
+
+const ordersBookData = new OrdersData();
+export const OrderTable: React.FC<OrderTableProps> = ({ currencyPair }) => {
+  const viewModel = new OrderBookViewModel({ currencyPair, ordersSize, ordersBookData });
+
+  useEffect(() => {
+    return () => {
+      viewModel.destroy();
+    };
+  });
   return (
     <div className="table-container">
       <table>
@@ -25,21 +35,16 @@ export const OrderTable: React.FC<OrderTableProps> = ({ orderBookObservable }) =
           </tr>
         </thead>
         <tbody>
-          {initialOrders.bids.map(([price], index) => (
+          {initialOrders.bids.map((_, index) => (
             <OrderRow
-              key={`${price}_${index}`}
+              key={`bids_${index}`}
               direction="buy"
               index={99 - index}
-              orderBookObservable={orderBookObservable}
+              ordersBookData={ordersBookData}
             />
           ))}
-          {initialOrders.asks.map(([price], index) => (
-            <OrderRow
-              key={`${price}_${index}`}
-              direction="sell"
-              index={index}
-              orderBookObservable={orderBookObservable}
-            />
+          {initialOrders.asks.map((_, index) => (
+            <OrderRow key={`asks_${index}`} direction="sell" index={index} ordersBookData={ordersBookData} />
           ))}
         </tbody>
       </table>

@@ -1,36 +1,34 @@
 import React, { useEffect } from 'react';
 import { TableCell } from './TableCell';
 import { Direction } from '../../shared/types';
-import { Observable } from '../../shared/Observer';
-import { OrderBook } from '../../Model/OrderBook';
+import { IOrdersData, Observer } from '../../Model/Observer';
 
 interface OrderRowProps {
   direction: Direction;
   index: number;
-  orderBookObservable?: Observable<OrderBook>;
+  ordersBookData: IOrdersData;
 }
 
-export const OrderRow: React.FC<OrderRowProps> = ({ direction, index, orderBookObservable }) => {
+export const OrderRow: React.FC<OrderRowProps> = ({ direction, index, ordersBookData }) => {
   const [price, setPrice] = React.useState('');
   const [size, setSize] = React.useState('');
 
   useEffect(() => {
-    if (!orderBookObservable) {
-      return;
-    }
-    const observer = orderBookObservable.subscribe(orderBook => {
-      const isBids = direction === 'buy';
-      const [newPrice, newSize] = orderBook.getCellData(isBids ? 'bids' : 'asks', index);
+    const updateData = (ordersData: IOrdersData) => {
+      const [newPrice, newSize] = ordersData.getOrder(direction === 'buy' ? 'bids' : 'asks', index);
       if (price !== newPrice) {
         setPrice(newPrice);
       }
       if (size !== newSize) {
         setSize(newSize);
       }
-    });
+    };
+
+    const observer = new Observer(updateData);
+    ordersBookData.attach(observer);
 
     return () => {
-      orderBookObservable.unsubscribe(observer);
+      ordersBookData.detach(observer);
     };
   }, []);
   return (
