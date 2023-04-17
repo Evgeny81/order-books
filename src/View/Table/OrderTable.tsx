@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { OrderRow } from './OrderRow';
 import { OrderBookViewModel } from '../../ViewModel/OrderBookViewModel';
 import { ordersSize } from '../../shared/constants';
-import { OrdersData } from '../../Model/Observer';
+import { OrdersData } from '../../ViewModel/Observer';
 import './OrderTable.css';
 
 export interface OrderTableProps {
@@ -16,8 +16,8 @@ const initialOrders = {
   asks: Array.from({ length: ordersSize - 20 }, () => [...emptyRow]),
 };
 
-const ordersBookData = new OrdersData();
 export const OrderTable: React.FC<OrderTableProps> = ({ currencyPair }) => {
+  const ordersBookData = new OrdersData();
   const viewModel = new OrderBookViewModel({ currencyPair, ordersSize, ordersBookData });
 
   useEffect(() => {

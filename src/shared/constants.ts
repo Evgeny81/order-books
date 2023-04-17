@@ -31,3 +31,20 @@ export const binarySearch = <T>(array: T[], value: T, comparator: Comparator<T>)
 
   return left;
 };
+
+type AnyFunction = (...args: any[]) => any;
+
+export const throttle = (originalFn: AnyFunction, delayMs: number): AnyFunction => {
+  let timeout: ReturnType<typeof setTimeout> | null;
+
+  return (...args: any[]) => {
+    if (timeout) {
+      return;
+    }
+
+    timeout = setTimeout(() => {
+      originalFn(...args);
+      timeout = null;
+    }, delayMs);
+  };
+};

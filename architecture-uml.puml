@@ -4,27 +4,28 @@ actor User
 package "View" {
   [OrderBook]
   [OrderTable]
-  [TableCell]
+  [OrderRow]
 }
 
 database "Model" {
-  [OrderBookClass]
   [WebSocketHandler]
-  [Observable]
 }
 
 component "ViewModel" {
   [OrderBookViewModel]
+  [Observer]
 }
 
 User --> [OrderBook]
 [OrderBook] --> [OrderTable]
-[OrderTable] --> [TableCell]
+[OrderTable] --> [OrderRow]
 
-[OrderBook] --> [OrderBookViewModel] : Use
+[OrderTable] --> [OrderBookViewModel] : Use
 
-[OrderBookViewModel] --> [OrderBook] : Manipulate
+[OrderBookViewModel] --> [OrderTable] : Manipulate
 [OrderBookViewModel] --> [WebSocketHandler] : Use
-[OrderBookViewModel] --> [Observable] : Use
+[OrderBookViewModel] --> [Observer] : Use
+
+[Observer] --> [OrderRow] : Updates
 
 @enduml

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { TableCell } from './TableCell';
 import { Direction } from '../../shared/types';
-import { IOrdersData, Observer } from '../../Model/Observer';
+import { IOrdersData, Observer } from '../../ViewModel/Observer';
+import { throttle } from '../../shared/constants';
 
 interface OrderRowProps {
   direction: Direction;
@@ -23,8 +24,8 @@ export const OrderRow: React.FC<OrderRowProps> = ({ direction, index, ordersBook
         setSize(newSize);
       }
     };
-
-    const observer = new Observer(updateData);
+    const throttledUpdateData = throttle(updateData, 400);
+    const observer = new Observer(throttledUpdateData);
     ordersBookData.attach(observer);
 
     return () => {

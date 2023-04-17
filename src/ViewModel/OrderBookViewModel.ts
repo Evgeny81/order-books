@@ -2,7 +2,7 @@ import { Order, ProductUpdate, ProductSnapshot } from '../shared/types';
 import { WebSocketHandler } from '../Model/WebSocketHandler';
 import { loggerService } from '../Services/LoggerService';
 import { notificationService } from '../Services/NotificationService';
-import { OrdersData } from '../Model/Observer';
+import { OrdersData } from './Observer';
 
 interface OrderBookViewModelProps {
   currencyPair: string;
