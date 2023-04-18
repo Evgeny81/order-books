@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { OrderRow } from './OrderRow';
 import { OrderBookViewModel } from '../../ViewModel/OrderBookViewModel';
 import { ordersSize } from '../../shared/constants';
-import { OrdersData } from '../../ViewModel/Observer';
+import { OrdersData } from '../../ViewModel/OrderData';
 import './OrderTable.css';
 
 export interface OrderTableProps {

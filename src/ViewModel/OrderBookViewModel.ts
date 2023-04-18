@@ -1,17 +1,16 @@
-import { Order, ProductUpdate, ProductSnapshot } from '../shared/types';
+import { Order, ProductUpdate, ProductSnapshot, IOrdersData } from '../shared/types';
 import { WebSocketHandler } from '../Model/WebSocketHandler';
 import { loggerService } from '../Services/LoggerService';
 import { notificationService } from '../Services/NotificationService';
-import { OrdersData } from './Observer';
 
 interface OrderBookViewModelProps {
   currencyPair: string;
   ordersSize: number;
-  ordersBookData: OrdersData;
+  ordersBookData: IOrdersData;
 }
 
 export class OrderBookViewModel {
-  private readonly ordersBookData: OrdersData;
+  private readonly ordersBookData: IOrdersData;
   private wsHandler: WebSocketHandler | null;
   private readonly currencyPair: string;
   private readonly ordersSize: number;

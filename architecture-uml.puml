@@ -13,18 +13,19 @@ database "Model" {
 
 component "ViewModel" {
   [OrderBookViewModel]
+  [OrderData]
   [Observer]
 }
 
 User --> [OrderBook]
 [OrderBook] --> [OrderTable]
 [OrderTable] --> [OrderRow]
+[OrderTable] --> [OrderBookViewModel] : Launches
 
-[OrderTable] --> [OrderBookViewModel] : Use
+[OrderBookViewModel] --> [OrderData] : Updates
 
-[OrderBookViewModel] --> [OrderTable] : Manipulate
-[OrderBookViewModel] --> [WebSocketHandler] : Use
-[OrderBookViewModel] --> [Observer] : Use
+[WebSocketHandler] --> [OrderBookViewModel] : Updates
+[OrderData] --> [Observer] : Updates
 
 [Observer] --> [OrderRow] : Updates
 

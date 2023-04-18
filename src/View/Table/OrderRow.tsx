@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { TableCell } from './TableCell';
-import { Direction } from '../../shared/types';
-import { IOrdersData, Observer } from '../../ViewModel/Observer';
+import { Direction, IOrdersData } from '../../shared/types';
+import { Observer } from '../../ViewModel/Observer';
 import { throttle } from '../../shared/constants';
 
 interface OrderRowProps {
